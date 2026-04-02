@@ -1,0 +1,27 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':dalbit_application')
+
+    implementation platform('software.amazon.awssdk:bom:2.41.24')
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:url-connection-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter'
+}
+
+jar {
+    enabled = true
+}
+
+/*
+    [Spring Boot 실행 JAR 비활성화]
+    멀티 모듈 구성 시 라이브러리 역할을 하는 모듈(Adapter, Domain 등)에 필수적인 설정.
+    해당 모듈은 spring 서버를 실행하는 jar이 아닌 참조 되는 역할.
+    따라서 실행하는 역할인 fat-jar 생성을 비활성화 시키는 설정.
+*/
+bootJar {
+    enabled = false
+}
