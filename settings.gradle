@@ -1,0 +1,13 @@
+rootProject.name = 'dalbit_spring_server'
+
+include 'dalbit_adapter_rest'         // 클라이언트의 HTTP 요청(Controller)을 받아 비즈니스 로직 실행
+include 'dalbit_adapter_auth'         // 클라이언트의 권한, 인증 요청을 처라
+
+include 'dalbit_adapter_messaging'    // 메시지 전송 처리
+include 'dalbit_adapter_persistence'  // DB 접근 및 데이터 영속성 처리 (JPA, QueryDSL 등)\
+include 'dalbit_adapter_storage'      // 파일 시스템, S3 등 외부 스토리지에 데이터 저장
+
+include 'dalbit_domain'               // [가장 안쪽] 도메인 엔티티, 핵심 규칙, POJO 상태 관리
+include 'dalbit_application'          // [중간] 유스케이스(Service), 도메인 로직의 흐름 제어, 포트 인터페이스 정의
+
+include 'dalbit_bootstrap'      // 애플리케이션 실행 진입점(Main), 모든 모듈을 통합하고 의존성 주입(DI) 수행
