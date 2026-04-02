@@ -37,3 +37,6 @@ out/
 .vscode/
 
 dalbit_bootstrap/src/main/resources/firebase/*.json
+
+.env
+docker_setup/
