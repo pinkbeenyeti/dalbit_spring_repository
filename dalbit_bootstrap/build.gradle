@@ -1,0 +1,21 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation project(':dalbit_adapter_auth')
+    implementation project(':dalbit_adapter_rest')
+    implementation project(':dalbit_adapter_messaging')
+    implementation project(':dalbit_adapter_persistence')
+    implementation project(':dalbit_adapter_storage')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar {
+    enabled = true
+    mainClass = 'DALBIT.bootstrap.DalbitBootstrapApplication'
+}
+
+jar {
+    enabled = false
+}
