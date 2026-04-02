@@ -1,0 +1,49 @@
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '4.0.2'
+}
+
+configurations {
+    asciidoctorExt
+}
+
+dependencies {
+    implementation project(':dalbit_application')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // --- 테스트용 의존성 ---
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+tasks.named('test') {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+jar {
+    enabled = true
+    dependsOn tasks.named('asciidoctor')
+
+    from("build/docs/asciidoc") {
+        into 'static/docs'
+    }
+}
+
+bootJar {
+    enabled = false
+}
