@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':dalbit_application')
+    implementation project(':dalbit_domain')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-mqtt'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+    implementation 'com.google.firebase:firebase-admin:9.7.0'
+}
+
+jar {
+    enabled = true
+}
+
+/*
+    [Spring Boot 실행 JAR 비활성화]
+    멀티 모듈 구성 시 라이브러리 역할을 하는 모듈(Adapter, Domain 등)에 필수적인 설정.
+    해당 모듈은 spring 서버를 실행하는 jar이 아닌 참조 되는 역할.
+    따라서 실행하는 역할인 fat-jar 생성을 비활성화 시키는 설정.
+*/
+bootJar {
+    enabled = false
+}

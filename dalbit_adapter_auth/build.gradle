@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':dalbit_application')
+
+    implementation 'com.google.firebase:firebase-admin:9.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'      // REST API 관련 의존성, 해당 모듈에서는 REST API에서 발생하는 예외나 Spring Security 설정을 위함.
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'                            // Jwt 토큰 사용을 위한 인터페이스 의존성, 컴파일 시 필요
+
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'                              // Jwt 의존성 실제 동작을 위한 구현체
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'                           // Jwt 의존성 실제 동작을 위한 구현체
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'   // Junit 5, Mockito 등 테스트에 사용하는 모듈
+}
+
+jar {
+    enabled = true
+}
+
+/*
+    [Spring Boot 실행 JAR 비활성화]
+    멀티 모듈 구성 시 라이브러리 역할을 하는 모듈(Adapter, Domain 등)에 필수적인 설정.
+    해당 모듈은 spring 서버를 실행하는 jar이 아닌 참조 되는 역할.
+    따라서 실행하는 역할인 fat-jar 생성을 비활성화 시키는 설정.
+*/
+bootJar {
+    enabled = false
+}
