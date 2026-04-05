@@ -2,7 +2,7 @@
 FROM eclipse-temurin:21-jdk-jammy
 
 # 2. 빌드된 jar 파일을 컨테이너 안으로 복사
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=dalbit_bootstrap/build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
 # 3. 앱 실행 명령
