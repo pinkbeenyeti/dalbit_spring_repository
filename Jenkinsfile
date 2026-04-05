@@ -38,7 +38,7 @@ pipeline {
                         docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
                         docker stop ${APP_NAME} || true &&
                         docker rm ${APP_NAME} || true &&
-                        docker run -d --name ${APP_NAME} -p 8080:8080 ${DOCKER_HUB_ID}/${APP_NAME}:latest
+                        docker run -d --name ${APP_NAME} -p 5000:5000 ${DOCKER_HUB_ID}/${APP_NAME}:latest
                     "
                     """
                 }
