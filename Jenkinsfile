@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_ID = 'pinkbeenyeti // 본인 도커 허브 ID
+        DOCKER_HUB_ID = 'pinkbeenyeti' // 본인 도커 허브 ID
         APP_NAME = 'dalbit-app'
     }
 
