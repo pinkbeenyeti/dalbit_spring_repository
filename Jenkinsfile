@@ -34,7 +34,7 @@ pipeline {
             steps {
                 sshagent(['spring-server-key']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@168.107.35.47"
+                    ssh -o StrictHostKeyChecking=no ubuntu@168.107.35.47 "
                         docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
                         docker stop ${APP_NAME} || true &&
                         docker rm ${APP_NAME} || true &&
