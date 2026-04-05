@@ -13,7 +13,7 @@ dependencies {
 
 bootJar {
     enabled = true
-    mainClass = 'DALBIT.bootstrap.DalbitBootstrapApplication'
+    mainClass = 'dalbit.bootstrap.DalbitBootstrapApplication'
 }
 
 jar {
