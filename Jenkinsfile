@@ -21,7 +21,7 @@ pipeline {
         stage('3. Docker Build & Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'docker-hub-credentials-id') {
+                    docker.withRegistry('', 'docker-access-token') {
                         def appImage = docker.build("${DOCKER_HUB_ID}/${APP_NAME}:${env.BUILD_NUMBER}")
                         appImage.push()
                         appImage.push('latest')
@@ -32,7 +32,7 @@ pipeline {
 
         stage('4. Deploy to VM 2') {
             steps {
-                sshagent(['oci-server-ssh-key']) {
+                sshagent(['spring-server-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@VM2_IP "
                         docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
