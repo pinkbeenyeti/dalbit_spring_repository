@@ -1,5 +1,5 @@
 # 1. 자바 실행 환경(JDK 21) 가져오기
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-jammy
 
 # 2. 빌드된 jar 파일을 컨테이너 안으로 복사
 ARG JAR_FILE=build/libs/*.jar
