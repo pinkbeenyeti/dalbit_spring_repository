@@ -35,11 +35,11 @@ pipeline {
                 withCredentials([
                     string(credentialsId: 'JWT_SECRET_KEY', variable: 'JWT_SECRET_KEY'),
                     string(credentialsId: 'DB_URL', variable: 'DB_URL'),
-                    string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME')
-                    string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD')
-                    string(credentialsId: 'R2_STORAGE_ACCESS_KEY', variable: 'R2_STORAGE_ACCESS_KEY')
-                    string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY')
-                    string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME')
+                    string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME'),
+                    string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'R2_STORAGE_ACCESS_KEY', variable: 'R2_STORAGE_ACCESS_KEY'),
+                    string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY'),
+                    string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME'),
                     string(credentialsId: 'RABBITMQ_PASSWORD', variable: 'RABBITMQ_PASSWORD')
                 ]) {
                         sshagent(['spring-server-key']) {
