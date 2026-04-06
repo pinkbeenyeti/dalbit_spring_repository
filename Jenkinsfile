@@ -32,17 +32,39 @@ pipeline {
 
         stage('4. Deploy to VM 2') {
             steps {
-                sshagent(['spring-server-key']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 "
-                        docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
-                        docker stop ${APP_NAME} || true &&
-                        docker rm ${APP_NAME} || true &&
-                        docker run -d --name ${APP_NAME} -p 5000:5000 ${DOCKER_HUB_ID}/${APP_NAME}:latest
-                    "
-                    """
+                withCredentials([
+                    string(credentialsId: 'JWT_SECRET_KEY', variable: 'JWT_SECRET_KEY'),
+                    string(credentialsId: 'DB_URL', variable: 'DB_URL'),
+                    string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME')
+                    string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD')
+                    string(credentialsId: 'R2_STORAGE_ACCESS_KEY', variable: 'R2_STORAGE_ACCESS_KEY')
+                    string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY')
+                    string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME')
+                    string(credentialsId: 'RABBITMQ_PASSWORD', variable: 'RABBITMQ_PASSWORD')
+                ]) {
+                        sshagent(['spring-server-key']) {
+                            sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 "
+                                docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
+                                docker stop ${APP_NAME} || true &&
+                                docker rm ${APP_NAME} || true &&
+
+                                docker run -d --name ${APP_NAME} \
+                                    -p 5000:5000 \
+                                    -e JWT_SECRET_KEY='${JWT_SECRET_KEY}' \
+                                    -e DB_URL='${DB_URL}' \
+                                    -e DB_USERNAME='${DB_USERNAME}' \
+                                    -e DB_PASSWORD='${DB_PASSWORD}' \
+                                    -e R2_STORAGE_ACCESS_KEY='${R2_STORAGE_ACCESS_KEY}' \
+                                    -e R2_STORAGE_SECRET_KEY='${R2_STORAGE_SECRET_KEY}' \
+                                    -e RABBITMQ_USERNAME='${RABBITMQ_USERNAME}' \
+                                    -e RABBITMQ_PASSWORD='${RABBITMQ_PASSWORD}' \
+                                    ${DOCKER_HUB_ID}/${APP_NAME}:latest
+                            "
+                            """
+                        }
+                    }
                 }
             }
         }
-    }
 }
