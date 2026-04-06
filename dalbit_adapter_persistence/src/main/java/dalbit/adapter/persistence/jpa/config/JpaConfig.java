@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaAuditing // 생성일/수정일 자동화를 위해 필수
 @EnableJpaRepositories(
-    basePackages = "DALBIT.adapter.persistence.jpa",
+    basePackages = "dalbit.adapter.persistence.jpa",
     repositoryImplementationPostfix = "Impl"
 )
-@EntityScan(basePackages = "DALBIT.adapter.persistence.jpa")
+@EntityScan(basePackages = "dalbit.adapter.persistence.jpa")
 public class JpaConfig {
 
 }

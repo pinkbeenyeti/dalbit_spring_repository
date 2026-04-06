@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = 'DALBIT'            // 프로젝트의 그룹 ID (보통 기업 도메인의 역순이나 팀명)
+    group = 'dalbit'            // 프로젝트의 그룹 ID (보통 기업 도메인의 역순이나 팀명)
     version = '0.0.1-SNAPSHOT'  // 프로젝트의 버전 (SNAPSHOT은 개발 중인 버전임을 의미)
 }
 
