@@ -37,6 +37,7 @@ pipeline {
                     string(credentialsId: 'DB_URL', variable: 'DB_URL'),
                     string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME'),
                     string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'REDIS_PASSWORD', variable: 'REDIS_PASSWORD'),
                     string(credentialsId: 'R2_STORAGE_ACCESS_KEY', variable: 'R2_STORAGE_ACCESS_KEY'),
                     string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY'),
                     string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME'),
@@ -55,6 +56,7 @@ pipeline {
                                     -e DB_URL='${DB_URL}' \
                                     -e DB_USERNAME='${DB_USERNAME}' \
                                     -e DB_PASSWORD='${DB_PASSWORD}' \
+                                    -e REDIS_PASSWORD='${REDIS_PASSWORD}' \
                                     -e R2_STORAGE_ACCESS_KEY='${R2_STORAGE_ACCESS_KEY}' \
                                     -e R2_STORAGE_SECRET_KEY='${R2_STORAGE_SECRET_KEY}' \
                                     -e RABBITMQ_USERNAME='${RABBITMQ_USERNAME}' \
