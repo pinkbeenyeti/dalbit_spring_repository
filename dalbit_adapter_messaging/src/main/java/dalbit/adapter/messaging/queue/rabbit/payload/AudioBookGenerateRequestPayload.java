@@ -8,16 +8,16 @@ public record AudioBookGenerateRequestPayload(
     @JsonProperty("audioBook_audio_external_id") String audioBookExternalId,
     @JsonProperty("voice_external_id") String voiceExternalId,
     @JsonProperty("voice_model_path") String voiceModelPath,
-    @JsonProperty("fairytale_script_path") String fairytaleScriptPath,
+    @JsonProperty("fairytale_id") Long fairytaleId,
     @JsonProperty("audioBook_audio_path") String audioBookAudioPath
 ) {
 
-    public static AudioBookGenerateRequestPayload from(String audioBookExternalId, String voiceExternalId, String fairytaleScriptPath) {
+    public static AudioBookGenerateRequestPayload from(String audioBookExternalId, String voiceExternalId, Long fairytaleId) {
         return AudioBookGenerateRequestPayload.builder()
             .audioBookExternalId(audioBookExternalId)
             .voiceExternalId(voiceExternalId)
             .voiceModelPath("dalbit/voice/" + voiceExternalId + "/model")
-            .fairytaleScriptPath(fairytaleScriptPath)
+            .fairytaleId(fairytaleId)
             .audioBookAudioPath("dalbit/audioBook/" + audioBookExternalId + "/audio")
             .build();
     }

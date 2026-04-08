@@ -50,7 +50,7 @@ public class AudioBookGenerateService implements GenerateAudioBookUseCase {
         eventPublisher.publishEvent(new AudioBookGenerationRequestEvent(
             savedAudioBook.getExternalId(),
             voiceExternalId,
-            fairytale.getContentUrl()
+            fairytale.getId()
         ));
     }
 

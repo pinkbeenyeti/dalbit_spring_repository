@@ -32,8 +32,8 @@ public class RabbitMqAdapter implements SendVoiceTrainingPort, SendAudioBookGene
     }
 
     @Override
-    public void sendAudioBookGenerateRequest(String audioBookExternalId, String voiceExternalId, String fairytaleScriptPath) {
-        AudioBookGenerateRequestPayload payload = AudioBookGenerateRequestPayload.from(audioBookExternalId, voiceExternalId, fairytaleScriptPath);
+    public void sendAudioBookGenerateRequest(String audioBookExternalId, String voiceExternalId, Long fairytaleId) {
+        AudioBookGenerateRequestPayload payload = AudioBookGenerateRequestPayload.from(audioBookExternalId, voiceExternalId, fairytaleId);
 
         try {
             log.info("[RabbitMQ] 오디오북 생성 요청 전송 - 오디오북 외부 아이디: {}", audioBookExternalId);
