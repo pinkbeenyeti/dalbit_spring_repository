@@ -46,8 +46,11 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/internal/queue/auth/**").access((authentication, context) -> {
                     String clientIp = context.getRequest().getRemoteAddr();
+
                     boolean isLocal = "127.0.0.1".equals(clientIp) || "0:0:0:0:0:0:0:1".equals(clientIp);
-                    return new AuthorizationDecision(isLocal);
+                    boolean isQueue = "10.0.0.166".equals(clientIp);
+
+                    return new AuthorizationDecision(isLocal || isQueue);
                 })
                 .anyRequest().authenticated())
 
