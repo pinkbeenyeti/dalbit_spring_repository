@@ -48,7 +48,7 @@ public class SecurityConfig {
                     String clientIp = context.getRequest().getRemoteAddr();
 
                     boolean isLocal = "127.0.0.1".equals(clientIp) || "0:0:0:0:0:0:0:1".equals(clientIp);
-                    boolean isQueue = "10.0.0.166".equals(clientIp);
+                    boolean isQueue = "10.0.0.188".equals(clientIp);
 
                     return new AuthorizationDecision(isLocal || isQueue);
                 })
