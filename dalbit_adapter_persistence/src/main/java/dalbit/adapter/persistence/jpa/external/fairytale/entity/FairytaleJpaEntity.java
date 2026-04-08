@@ -30,7 +30,7 @@ public class FairytaleJpaEntity {
     @Column(nullable = false)
     private Category category;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Builder
