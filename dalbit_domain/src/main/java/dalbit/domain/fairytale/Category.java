@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum Category {
 
     TRADITIONAL("C1", "전래동화"),
-    AESOP("C2", "이솝우화");
+    CLASSIC("C2", "명작동화"),
+    AESOP("C3", "이솝우화");
 
     private final String code;
     private final String title;
