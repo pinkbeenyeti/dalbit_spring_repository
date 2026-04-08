@@ -40,7 +40,7 @@ class FairytaleJpaControllerDocsTest {
             .id(1L)
             .title("달빛 공주의 모험")
             .category(Category.TRADITIONAL)
-            .contentUrl("http://s3.fairytale.test")
+            .content("안녕하세요. 이게, 내용입니다. 껄껄")
             .build();
 
         given(getFairytaleUseCase.getFairytale()).willReturn(List.of(mockFairytale));

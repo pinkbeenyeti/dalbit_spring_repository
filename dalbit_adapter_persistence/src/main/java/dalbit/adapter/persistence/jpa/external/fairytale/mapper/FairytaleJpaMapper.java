@@ -14,7 +14,7 @@ public class FairytaleJpaMapper {
             .id(fairytale.getId())
             .title(fairytale.getTitle())
             .category(fairytale.getCategory())
-            .contentUrl(fairytale.getContentUrl())
+            .content(fairytale.getContent())
             .build();
     }
 
@@ -25,7 +25,7 @@ public class FairytaleJpaMapper {
             .id(entity.getId())
             .title(entity.getTitle())
             .category(entity.getCategory())
-            .contentUrl(entity.getContentUrl())
+            .content(entity.getContent())
             .build();
     }
 

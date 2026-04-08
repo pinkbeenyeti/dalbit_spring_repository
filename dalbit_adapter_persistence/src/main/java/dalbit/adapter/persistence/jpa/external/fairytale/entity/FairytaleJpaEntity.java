@@ -30,14 +30,14 @@ public class FairytaleJpaEntity {
     @Column(nullable = false)
     private Category category;
 
-    @Column(name = "content_url", nullable = false)
-    private String contentUrl;
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Builder
-    public FairytaleJpaEntity(Long id, String title, Category category, String contentUrl) {
+    public FairytaleJpaEntity(Long id, String title, Category category, String content) {
         this.id = id;
         this.title = title;
         this.category = category;
-        this.contentUrl = contentUrl;
+        this.content = content;
     }
 }
