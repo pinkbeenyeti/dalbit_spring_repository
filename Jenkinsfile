@@ -33,6 +33,7 @@ pipeline {
         stage('4. Deploy to VM 2') {
             steps {
                 withCredentials([
+                    file(credentialsId: 'FIREBASE_SECRET_FILE', variable: 'FIREBASE_KEY_FILE'),
                     string(credentialsId: 'JWT_SECRET_KEY', variable: 'JWT_SECRET_KEY'),
                     string(credentialsId: 'DB_URL', variable: 'DB_URL'),
                     string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME'),
@@ -42,7 +43,6 @@ pipeline {
                     string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY'),
                     string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME'),
                     string(credentialsId: 'RABBITMQ_PASSWORD', variable: 'RABBITMQ_PASSWORD'),
-                    string(credentialsId: 'FIREBASE_CONFIG_JSON', variable: 'FIREBASE_CONFIG_JSON')
                 ]) {
                         sshagent(['spring-server-key']) {
                             sh """
@@ -53,6 +53,8 @@ pipeline {
 
                                 docker run -d --name ${APP_NAME} \
                                     -p 5000:5000 \
+                                    -v /home/ubuntu/dalbit-key.json:/app/dalbit-key.json \
+                                    -e FIREBASE_ACCOUNT_PATH='/app/dalbit-key.json' \
                                     -e JWT_SECRET_KEY='${JWT_SECRET_KEY}' \
                                     -e DB_URL='${DB_URL}' \
                                     -e DB_USERNAME='${DB_USERNAME}' \
@@ -62,7 +64,6 @@ pipeline {
                                     -e R2_STORAGE_SECRET_KEY='${R2_STORAGE_SECRET_KEY}' \
                                     -e RABBITMQ_USERNAME='${RABBITMQ_USERNAME}' \
                                     -e RABBITMQ_PASSWORD='${RABBITMQ_PASSWORD}' \
-                                    -e FIREBASE_CONFIG_JSON='${FIREBASE_CONFIG_JSON}' \
                                     ${DOCKER_HUB_ID}/${APP_NAME}:latest
                             "
                             """
