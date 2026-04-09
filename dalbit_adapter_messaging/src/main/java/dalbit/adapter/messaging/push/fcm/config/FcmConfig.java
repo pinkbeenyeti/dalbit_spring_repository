@@ -1,12 +1,46 @@
 package dalbit.adapter.messaging.push.fcm.config;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.PathResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 public class FcmConfig {
+
+    @Value("${firebase.account-path}") private String accountPath;
+    @Value("${firebase.account-json}") private String accountJson;
+
+    @Bean
+    public FirebaseMessaging firebaseMessaging() throws IOException {
+        InputStream serviceAccount;
+
+        if (accountJson != null && !accountJson.trim().isEmpty()) {
+            serviceAccount = new ByteArrayInputStream(accountJson.getBytes(StandardCharsets.UTF_8));
+        } else {
+            serviceAccount = new PathResource(accountPath).getInputStream();
+        }
+
+        FirebaseOptions options = FirebaseOptions.builder()
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .build();
+
+        FirebaseApp app = FirebaseApp.getApps().isEmpty()
+            ? FirebaseApp.initializeApp(options)
+            : FirebaseApp.getInstance();
+
+        return FirebaseMessaging.getInstance(app);
+    }
 
     @Bean(name = "fcmExecutor")
     public Executor fcmExecutor() {

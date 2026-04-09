@@ -41,7 +41,8 @@ pipeline {
                     string(credentialsId: 'R2_STORAGE_ACCESS_KEY', variable: 'R2_STORAGE_ACCESS_KEY'),
                     string(credentialsId: 'R2_STORAGE_SECRET_KEY', variable: 'R2_STORAGE_SECRET_KEY'),
                     string(credentialsId: 'RABBITMQ_USERNAME', variable: 'RABBITMQ_USERNAME'),
-                    string(credentialsId: 'RABBITMQ_PASSWORD', variable: 'RABBITMQ_PASSWORD')
+                    string(credentialsId: 'RABBITMQ_PASSWORD', variable: 'RABBITMQ_PASSWORD'),
+                    string(credentialsId: 'FIREBASE_CONFIG_JSON', variable: 'FIREBASE_CONFIG_JSON')
                 ]) {
                         sshagent(['spring-server-key']) {
                             sh """
@@ -61,6 +62,7 @@ pipeline {
                                     -e R2_STORAGE_SECRET_KEY='${R2_STORAGE_SECRET_KEY}' \
                                     -e RABBITMQ_USERNAME='${RABBITMQ_USERNAME}' \
                                     -e RABBITMQ_PASSWORD='${RABBITMQ_PASSWORD}' \
+                                    -e FIREBASE_CONFIG_JSON='${FIREBASE_CONFIG_JSON}' \
                                     ${DOCKER_HUB_ID}/${APP_NAME}:latest
                             "
                             """
