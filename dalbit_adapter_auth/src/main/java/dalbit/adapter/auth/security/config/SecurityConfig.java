@@ -52,6 +52,14 @@ public class SecurityConfig {
 
                     return new AuthorizationDecision(isLocal || isQueue);
                 })
+                .requestMatchers("/actuator/**").access((authentication, context) -> {
+                    String clientIp = context.getRequest().getRemoteAddr();
+
+                    boolean isLocal = "127.0.0.1".equals(clientIp) || "0:0:0:0:0:0:0:1".equals(clientIp);
+                    boolean isMonitor = "10.0.0.207".equals(clientIp);
+
+                    return new AuthorizationDecision(isLocal || isMonitor);
+                })
                 .anyRequest().authenticated())
 
             // 필터 예외 처리, JWT 토큰 검증 시 발생하는 토큰 만료나, 잘못된 토큰 에러를 규격에 맞게 처리

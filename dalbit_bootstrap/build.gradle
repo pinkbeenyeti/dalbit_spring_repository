@@ -6,8 +6,9 @@ dependencies {
     implementation project(':dalbit_adapter_messaging')
     implementation project(':dalbit_adapter_persistence')
     implementation project(':dalbit_adapter_storage')
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

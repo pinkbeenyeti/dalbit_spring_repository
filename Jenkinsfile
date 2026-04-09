@@ -54,6 +54,7 @@ pipeline {
 
                                 docker run -d --name ${APP_NAME} \
                                     -p 5000:5000 \
+                                    -p 5001:5001 \
                                     -v /home/ubuntu/dalbit-key.json:/app/dalbit-key.json \
                                     -e FIREBASE_ACCOUNT_PATH=/app/dalbit-key.json \
                                     -e JWT_SECRET_KEY='${JWT_SECRET_KEY}' \
