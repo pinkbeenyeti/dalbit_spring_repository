@@ -33,7 +33,7 @@ pipeline {
         stage('4. Deploy to VM 2') {
             steps {
                 withCredentials([
-                    file(credentialsId: 'FIREBASE_SECRET_FILE', variable: 'FIREBASE_KEY_FILE'),
+                    file(credentialsId: 'FIREBASE_SECRET_FILE', variable: 'FIREBASE_SECRET_FILE'),
                     string(credentialsId: 'JWT_SECRET_KEY', variable: 'JWT_SECRET_KEY'),
                     string(credentialsId: 'DB_URL', variable: 'DB_URL'),
                     string(credentialsId: 'DB_USERNAME', variable: 'DB_USERNAME'),
@@ -46,6 +46,7 @@ pipeline {
                 ]) {
                         sshagent(['spring-server-key']) {
                             sh """
+                            scp -o StrictHostKeyChecking=no ${FIREBASE_SECRET_FILE}  ubuntu@10.0.0.183:/home/ubuntu/dalbit-key.json
                             ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 "
                                 docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
                                 docker stop ${APP_NAME} || true &&
@@ -54,7 +55,7 @@ pipeline {
                                 docker run -d --name ${APP_NAME} \
                                     -p 5000:5000 \
                                     -v /home/ubuntu/dalbit-key.json:/app/dalbit-key.json \
-                                    -e FIREBASE_ACCOUNT_PATH='/app/dalbit-key.json' \
+                                    -e FIREBASE_ACCOUNT_PATH=/app/dalbit-key.json \
                                     -e JWT_SECRET_KEY='${JWT_SECRET_KEY}' \
                                     -e DB_URL='${DB_URL}' \
                                     -e DB_USERNAME='${DB_USERNAME}' \
