@@ -46,8 +46,8 @@ pipeline {
                 ]) {
                         sshagent(['spring-server-key']) {
                             sh """
-                            sh "ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 'sudo rm -f /home/ubuntu/dalbit-key.json'"
-                            sh 'scp -o StrictHostKeyChecking=no $FIREBASE_SECRET_FILE ubuntu@10.0.0.183:/home/ubuntu/dalbit-key.json'
+                            ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 'sudo rm -f /home/ubuntu/dalbit-key.json'
+                            scp -o StrictHostKeyChecking=no $FIREBASE_SECRET_FILE ubuntu@10.0.0.183:/home/ubuntu/dalbit-key.json
                             ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.183 "
                                 docker pull ${DOCKER_HUB_ID}/${APP_NAME}:latest &&
                                 docker stop ${APP_NAME} || true &&
