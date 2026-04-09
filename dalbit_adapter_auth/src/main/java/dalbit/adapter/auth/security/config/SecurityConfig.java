@@ -56,7 +56,7 @@ public class SecurityConfig {
                     String clientIp = context.getRequest().getRemoteAddr();
 
                     boolean isLocal = "127.0.0.1".equals(clientIp) || "0:0:0:0:0:0:0:1".equals(clientIp);
-                    boolean isMonitor = "10.0.0.207".equals(clientIp);
+                    boolean isMonitor = "10.0.0.247".equals(clientIp);
 
                     return new AuthorizationDecision(isLocal || isMonitor);
                 })
