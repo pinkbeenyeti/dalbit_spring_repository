@@ -54,6 +54,11 @@ pipeline {
                                 docker rm ${APP_NAME} || true &&
 
                                 docker run -d --name ${APP_NAME} \
+                                    --log-opt loki-url='http://10.0.0.188:3100/loki/api/v1/push' \
+                                    --log-opt loki-batch-size='400' \
+                                    --log-opt labels='app,env' \
+                                    --label app=dalbit-app \
+                                    --label env=production \
                                     -p 5000:5000 \
                                     -p 5001:5001 \
                                     -v /home/ubuntu/dalbit-key.json:/app/dalbit-key.json \
