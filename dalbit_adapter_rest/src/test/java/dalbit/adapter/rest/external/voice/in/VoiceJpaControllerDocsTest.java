@@ -108,6 +108,13 @@ class VoiceJpaControllerDocsTest {
     @DisplayName("음성 등록 - 성공")
     void registerVoice_Success() throws Exception {
         RegisterVoiceRequest request = new RegisterVoiceRequest("달빛 자장가");
+        Voice mockVoice = Voice.builder()
+            .id(1L)
+            .externalId(UUID.randomUUID().toString())
+            .name(VoiceName.of("달빛 자장가"))
+            .build();
+
+        given(registerVoiceUseCase.registerVoice(any(), anyString())).willReturn(mockVoice);
 
         mockMvc.perform(post("/api/v1/dalbit/voice/register")
                 .with(csrf())
@@ -116,12 +123,15 @@ class VoiceJpaControllerDocsTest {
             .andExpect(status().isOk())
             .andDo(document("voice-register-success",
                 preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 requestFields(
                     fieldWithPath("name").description("등록할 음성의 이름")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드"),
-                    fieldWithPath("message").description("응답 메시지")
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.externalId").description("등록된 음성 고유 식별자"),
+                    fieldWithPath("data.name").description("등록된 음성 이름")
                 )
             ));
     }
