@@ -7,30 +7,32 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VoiceJpaMapper {
+public VoiceJpaEntity toEntity(Voice voice) {
+    if (voice == null) return null;
 
-    public VoiceJpaEntity toEntity(Voice voice) {
-        if (voice == null) return null;
+    return VoiceJpaEntity.builder()
+        .id(voice.getId())
+        .userId(voice.getUserId())
+        .externalId(voice.getExternalId())
+        .status(voice.getStatus())
+        .name(voice.getName().getValue())
+        .modelUrl(voice.getModelUrl())
+        .createdAt(voice.getCreatedAt())
+        .build();
+}
 
-        return VoiceJpaEntity.builder()
-            .id(voice.getId())
-            .userId(voice.getUserId())
-            .externalId(voice.getExternalId())
-            .status(voice.getStatus())
-            .name(voice.getName().getValue())
-            .modelUrl(voice.getModelUrl())
-            .build();
-    }
+public Voice toDomain(VoiceJpaEntity entity) {
+    if (entity == null) return null;
 
-    public Voice toDomain(VoiceJpaEntity entity) {
-        if (entity == null) return null;
+    return Voice.builder()
+        .id(entity.getId())
+        .userId(entity.getUserId())
+        .externalId(entity.getExternalId())
+        .status(entity.getStatus())
+        .name(VoiceName.of(entity.getName()))
+        .modelUrl(entity.getModelUrl())
+        .createdAt(entity.getCreatedAt())
+        .build();
+}
 
-        return Voice.builder()
-            .id(entity.getId())
-            .userId(entity.getUserId())
-            .externalId(entity.getExternalId())
-            .status(entity.getStatus())
-            .name(VoiceName.of(entity.getName()))
-            .modelUrl(entity.getModelUrl())
-            .build();
-    }
 }

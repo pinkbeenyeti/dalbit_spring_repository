@@ -2,6 +2,7 @@ package dalbit.domain.voice;
 
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,19 +18,21 @@ public class Voice {
     private RegistrationStatus status;
     private VoiceName name;
     private String modelUrl;
+    private final LocalDateTime createdAt;
 
     @Builder
-    private Voice(Long id, Long userId, String externalId, RegistrationStatus status, VoiceName name, String modelUrl) {
+    private Voice(Long id, Long userId, String externalId, RegistrationStatus status, VoiceName name, String modelUrl, LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.externalId = externalId;
         this.status = status;
         this.name = name;
         this.modelUrl = modelUrl;
+        this.createdAt = createdAt;
     }
 
     public static Voice register(Long userId, VoiceName name) {
-        return new Voice(null, userId, UUID.randomUUID().toString(), RegistrationStatus.WAITING_UPLOAD, name, null);
+        return new Voice(null, userId, UUID.randomUUID().toString(), RegistrationStatus.WAITING_UPLOAD, name, null, LocalDateTime.now());
     }
 
     public void startTraining() {

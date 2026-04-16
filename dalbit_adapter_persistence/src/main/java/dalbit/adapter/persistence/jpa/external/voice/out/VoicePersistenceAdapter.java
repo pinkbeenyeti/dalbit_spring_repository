@@ -5,7 +5,9 @@ import dalbit.adapter.persistence.jpa.external.voice.mapper.VoiceJpaMapper;
 import dalbit.application.persistence.jpa.voice.port.DeleteVoicePort;
 import dalbit.application.persistence.jpa.voice.port.LoadVoicePort;
 import dalbit.application.persistence.jpa.voice.port.SaveVoicePort;
+import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +29,8 @@ public class VoicePersistenceAdapter implements SaveVoicePort, LoadVoicePort, De
     }
 
     @Override
-    public List<Voice> loadAllVoicesByUserId(Long userId) {
-        return voiceJpaRepository.findAllByUserId(userId).stream()
+    public List<Voice> loadAllVoicesByUserIdAndStatuses(Long userId, List<RegistrationStatus> statuses) {
+        return voiceJpaRepository.findAllByUserIdAndStatusIn(userId, statuses).stream()
             .map(voiceJpaMapper::toDomain)
             .toList();
     }
@@ -60,5 +62,10 @@ public class VoicePersistenceAdapter implements SaveVoicePort, LoadVoicePort, De
     @Override
     public void deleteVoiceByUserIdAndExternalId(Long userId, String externalId) {
         voiceJpaRepository.deleteByUserIdAndExternalId(userId, externalId);
+    }
+
+    @Override
+    public void deleteVoicesByStatusInAndCreatedBefore(List<RegistrationStatus> statuses, LocalDateTime dateTime) {
+        voiceJpaRepository.deleteByStatusInAndCreatedAtBefore(statuses, dateTime);
     }
 }
