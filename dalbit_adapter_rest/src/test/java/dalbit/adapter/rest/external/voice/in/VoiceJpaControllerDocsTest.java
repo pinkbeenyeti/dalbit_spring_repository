@@ -10,6 +10,7 @@ import dalbit.application.rest.external.voice.useCase.RegisterVoiceUseCase;
 import dalbit.application.rest.external.voice.useCase.UpdateVoiceInfoUseCase;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
+import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
 import dalbit.domain.voice.VoiceName;
 import org.junit.jupiter.api.DisplayName;
@@ -69,7 +70,8 @@ class VoiceJpaControllerDocsTest {
                     fieldWithPath("code").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data[].externalId").description("음성 고유 식별자"),
-                    fieldWithPath("data[].name").description("음성 이름")
+                    fieldWithPath("data[].name").description("음성 이름"),
+                    fieldWithPath("data[].status").description("음성 등록 상태")
                 )
             ));
     }
@@ -112,6 +114,7 @@ class VoiceJpaControllerDocsTest {
             .id(1L)
             .externalId(UUID.randomUUID().toString())
             .name(VoiceName.of("달빛 자장가"))
+            .status(RegistrationStatus.WAITING_UPLOAD)
             .build();
 
         given(registerVoiceUseCase.registerVoice(any(), anyString())).willReturn(mockVoice);
@@ -131,7 +134,8 @@ class VoiceJpaControllerDocsTest {
                     fieldWithPath("code").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.externalId").description("등록된 음성 고유 식별자"),
-                    fieldWithPath("data.name").description("등록된 음성 이름")
+                    fieldWithPath("data.name").description("등록된 음성 이름"),
+                    fieldWithPath("data.status").description("등록된 음성 상태")
                 )
             ));
     }

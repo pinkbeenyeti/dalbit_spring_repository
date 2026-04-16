@@ -16,6 +16,7 @@ import dalbit.application.storage.port.GenerateUploadUrlPort;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
 import dalbit.domain.common.storage.Category;
+import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
 import dalbit.domain.voice.VoiceName;
 import java.util.List;
@@ -120,11 +121,15 @@ class VoiceJpaServiceTest {
         @DisplayName("요청 성공: 목소리 리스트 반환")
         void success_get_voice_list() {
             List<Voice> expectedList = List.of(voice);
-            given(loadVoicePort.loadAllVoicesByUserId(USER_ID)).willReturn(expectedList);
+            given(loadVoicePort.loadAllVoicesByUserIdAndStatuses(any(), any())).willReturn(expectedList);
 
             List<Voice> result = voiceJpaService.getVoiceList(USER_ID);
 
             assertThat(result).isEqualTo(expectedList);
+            then(loadVoicePort).should(times(1)).loadAllVoicesByUserIdAndStatuses(
+                USER_ID, 
+                List.of(RegistrationStatus.PROCESSING, RegistrationStatus.COMPLETED, RegistrationStatus.FAILED)
+            );
         }
     }
 

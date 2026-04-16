@@ -11,10 +11,12 @@ import dalbit.application.storage.port.GenerateUploadUrlPort;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
 import dalbit.domain.common.storage.Category;
+import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
 import dalbit.domain.voice.VoiceName;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +56,10 @@ public class VoiceJpaService implements
     @Override
     @Transactional(readOnly = true)
     public List<Voice> getVoiceList(Long userId) {
-        return loadVoicePort.loadAllVoicesByUserId(userId);
+        return loadVoicePort.loadAllVoicesByUserIdAndStatuses(
+            userId, 
+            List.of(RegistrationStatus.PROCESSING, RegistrationStatus.COMPLETED, RegistrationStatus.FAILED)
+        );
     }
 
     @Override
@@ -74,5 +79,16 @@ public class VoiceJpaService implements
     @Transactional
     public void deleteVoice(Long userId, String externalId) {
         deleteVoicePort.deleteVoiceByUserIdAndExternalId(userId, externalId);
+    }
+
+    @Override
+    @Transactional
+    public void cleanupExpiredVoices(int retentionHours) {
+        LocalDateTime threshold = LocalDateTime.now().minusHours(retentionHours);
+
+        deleteVoicePort.deleteVoicesByStatusInAndCreatedBefore(
+            List.of(RegistrationStatus.WAITING_UPLOAD, RegistrationStatus.FAILED),
+            threshold
+        );
     }
 }
