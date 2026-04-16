@@ -83,6 +83,7 @@ public class R2Adapter implements GenerateUploadUrlPort, VerifyUploadPort {
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(r2Properties.bucketName())
                 .key(path)
+                .contentType("audio/wav")
                 .build();
 
             PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
