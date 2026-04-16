@@ -24,7 +24,7 @@ public class RabbitMqAdapter implements SendVoiceTrainingPort, SendAudioBookGene
 
         try {
             log.info("[RabbitMQ] 목소리 학습 요청 전송 - 목소리 외부 아이디: {}, 페이로드: {}", externalId, payload);
-            rabbitTemplate.convertAndSend(properties.aiExchange(), properties.voiceTrainingRoutingKey(), payload);
+            rabbitTemplate.convertAndSend(properties.requestExchange(), properties.voiceTrainingRequestRoutingKey(), payload);
         } catch (Exception e) {
             log.error("[RabbitMQ] 목소리 학습 요청 전송 실패 - 목소리 외부 아이디: {}, 페이로드: {}", externalId, payload, e);
             throw new DalbitException(ErrorCode.FAIL_SEND_COMMAND);
@@ -37,7 +37,7 @@ public class RabbitMqAdapter implements SendVoiceTrainingPort, SendAudioBookGene
 
         try {
             log.info("[RabbitMQ] 오디오북 생성 요청 전송 - 오디오북 외부 아이디: {}", audioBookExternalId);
-            rabbitTemplate.convertAndSend(properties.aiExchange(), properties.audiobookGenerationRoutingKey(), payload);
+            rabbitTemplate.convertAndSend(properties.requestExchange(), properties.audiobookGenerationRequestRoutingKey(), payload);
         } catch (Exception e) {
             log.error("[RabbitMQ] 오디오북 생성 요청 전송 실패 - 오디오북 외부 아이디: {}, 에러: {}", audioBookExternalId, e.getMessage());
             throw new DalbitException(ErrorCode.FAIL_SEND_COMMAND);

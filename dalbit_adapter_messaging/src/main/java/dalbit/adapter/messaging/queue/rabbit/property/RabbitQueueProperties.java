@@ -7,6 +7,8 @@ public record RabbitQueueProperties(
     String dlq,
     String exchangeDlx,
     String routingKeyError,
+    String voiceTrainingRequestQueue,
     String voiceTrainingCompletionQueue,
-    String audioBookGenerationCompletionQueue
+    String audiobookGenerationRequestQueue,
+    String audiobookGenerationCompletionQueue
 ) { }

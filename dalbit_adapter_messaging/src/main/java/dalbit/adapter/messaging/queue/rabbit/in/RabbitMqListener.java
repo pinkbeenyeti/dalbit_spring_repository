@@ -45,7 +45,7 @@ public class RabbitMqListener {
     }
 
     @RabbitListener(
-        queues = "${rabbitmq.queue.audioBook-generation-completion-queue}",
+        queues = "${rabbitmq.queue.audiobook-generation-completion-queue}",
         containerFactory = "rabbitListenerContainerFactory"
     )
     public void listenAudioBookGenerationCompletionMessage(

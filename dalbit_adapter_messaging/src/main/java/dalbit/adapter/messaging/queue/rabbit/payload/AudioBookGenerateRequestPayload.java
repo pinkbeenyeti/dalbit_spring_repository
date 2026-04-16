@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record AudioBookGenerateRequestPayload(
-    @JsonProperty("audioBook_audio_external_id") String audioBookExternalId,
+    @JsonProperty("audioBook_external_id") String audioBookExternalId,
     @JsonProperty("voice_external_id") String voiceExternalId,
     @JsonProperty("voice_model_path") String voiceModelPath,
     @JsonProperty("fairytale_id") Long fairytaleId,

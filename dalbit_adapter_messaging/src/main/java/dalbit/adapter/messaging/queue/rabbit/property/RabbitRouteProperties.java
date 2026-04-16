@@ -4,9 +4,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("rabbitmq.route")
 public record RabbitRouteProperties(
-    String aiExchange,
-    String voiceTrainingRoutingKey,
-    String audiobookGenerationRoutingKey
+    String requestExchange,
+    String responseExchange,
+    String voiceTrainingRequestRoutingKey,
+    String voiceTrainingResponseRoutingKey,
+    String audiobookGenerationRequestRoutingKey,
+    String audiobookGenerationResponseRoutingKey
 ) {
 
 }
