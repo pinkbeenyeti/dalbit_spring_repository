@@ -66,12 +66,12 @@ public class VoiceJpaController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<ApiResponse<Void>> registerVoice(
+    public ResponseEntity<ApiResponse<VoiceResponse>> registerVoice(
         @AuthenticationPrincipal Long userId,
         @Valid @RequestBody RegisterVoiceRequest request
     ) {
-        registerVoiceUseCase.registerVoice(userId, request.name());
-        return ApiResponse.success();
+        Voice savedVoice = registerVoiceUseCase.registerVoice(userId, request.name());
+        return ApiResponse.success(VoiceResponse.from(savedVoice));
     }
 
     @PatchMapping("update/name")

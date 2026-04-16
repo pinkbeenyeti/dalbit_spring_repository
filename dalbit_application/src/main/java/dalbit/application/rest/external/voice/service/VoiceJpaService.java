@@ -31,13 +31,14 @@ public class VoiceJpaService implements
 
     @Override
     @Transactional
-    public void registerVoice(Long userId, String name) {
+    public Voice registerVoice(Long userId, String name) {
         if (loadVoicePort.existsByUserIdAndName(userId, name)) {
             throw new DalbitException(ErrorCode.ALREADY_EXIST_VOICE_NAME);
         }
 
         Voice voice = Voice.register(userId, VoiceName.of(name));
-        saveVoicePort.saveVoice(voice);
+
+        return saveVoicePort.saveVoice(voice);
     }
 
     @Override
