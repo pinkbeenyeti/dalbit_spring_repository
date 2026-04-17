@@ -87,7 +87,7 @@ public class VoiceJpaService implements
         LocalDateTime threshold = LocalDateTime.now().minusHours(retentionHours);
 
         deleteVoicePort.deleteVoicesByStatusInAndCreatedBefore(
-            List.of(RegistrationStatus.WAITING_UPLOAD, RegistrationStatus.FAILED),
+            List.of(RegistrationStatus.WAITING_UPLOAD, RegistrationStatus.FAILED, RegistrationStatus.PROCESSING),
             threshold
         );
     }
