@@ -8,6 +8,8 @@ import dalbit.application.rest.external.audio.useCase.GetAudioBooksUseCase;
 import dalbit.application.persistence.jpa.audio.port.DeleteAudioBookPort;
 import dalbit.application.persistence.jpa.audio.port.LoadAudioBookPort;
 import dalbit.domain.audio.AudioBook;
+import dalbit.domain.audio.GenerationStatus;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,5 +57,16 @@ public class AudioBookJpaService implements DeleteAudioBookUseCase, GetAudioBook
     @Transactional
     public void deleteAudioBook(Long userId, String audioExternalId) {
         deleteAudioBookPort.deleteAudioBook(userId, audioExternalId);
+    }
+
+    @Override
+    @Transactional
+    public void cleanupExpiredAudioBooks(int retentionHours) {
+        LocalDateTime threshold = LocalDateTime.now().minusHours(retentionHours);
+
+        deleteAudioBookPort.deleteAudioBooksByStatusInAndCreatedBefore(
+            List.of(GenerationStatus.FAILED, GenerationStatus.PROCESSING),
+            threshold
+        );
     }
 }

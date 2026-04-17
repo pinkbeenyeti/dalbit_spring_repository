@@ -18,6 +18,7 @@ public class AudioBookJpaMapper {
             .fairytaleId(audioBook.getFairytaleId())
             .status(audioBook.getStatus())
             .audioUrl(audioBook.getAudioUrl())
+            .createdAt(audioBook.getCreatedAt())
             .build();
     }
 
@@ -32,6 +33,7 @@ public class AudioBookJpaMapper {
             .fairytaleId(entity.getFairytaleId())
             .status(entity.getStatus())
             .audioUrl(entity.getAudioUrl())
+            .createdAt(entity.getCreatedAt())
             .build();
     }
 }

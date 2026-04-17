@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import dalbit.domain.audio.GenerationStatus;
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class AudioBookPersistenceAdapter implements
@@ -42,5 +45,10 @@ public class AudioBookPersistenceAdapter implements
     @Override
     public void deleteAudioBook(Long userId, String audioExternalId) {
         audioBookJpaRepository.deleteByUserIdAndExternalId(userId, audioExternalId);
+    }
+
+    @Override
+    public void deleteAudioBooksByStatusInAndCreatedBefore(List<GenerationStatus> statuses, LocalDateTime dateTime) {
+        audioBookJpaRepository.deleteByStatusInAndCreatedAtBefore(statuses, dateTime);
     }
 }
