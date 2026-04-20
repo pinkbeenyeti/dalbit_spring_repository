@@ -41,4 +41,8 @@ public class AudioBook {
         this.status = GenerationStatus.COMPLETED;
         this.audioUrl = audioUrl;
     }
+
+    public String getAudioDirectory(String voiceExternalId) {
+        return String.format("audioBook/%s/%s/", this.externalId, voiceExternalId);
+    }
 }

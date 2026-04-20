@@ -10,7 +10,6 @@ import dalbit.application.rest.external.voice.useCase.DeleteVoiceUseCase;
 import dalbit.application.rest.external.voice.useCase.GetVoiceInfoUseCase;
 import dalbit.application.rest.external.voice.useCase.RegisterVoiceUseCase;
 import dalbit.application.rest.external.voice.useCase.UpdateVoiceInfoUseCase;
-import dalbit.domain.common.storage.Category;
 import dalbit.domain.voice.Voice;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -57,7 +56,7 @@ public class VoiceJpaController {
         @RequestParam("externalId") String externalId
     ) {
         List<String> uploadUrls = registerVoiceUseCase.getVoiceUploadUrls(
-            Category.VOICE,
+            userId,
             externalId,
             10
         );

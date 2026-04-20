@@ -1,6 +1,8 @@
 package dalbit.adapter.messaging.queue.rabbit.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dalbit.domain.audio.AudioBook;
+import dalbit.domain.voice.Voice;
 import lombok.Builder;
 
 @Builder
@@ -12,13 +14,13 @@ public record AudioBookGenerateRequestPayload(
     @JsonProperty("audioBook_audio_path") String audioBookAudioPath
 ) {
 
-    public static AudioBookGenerateRequestPayload from(String audioBookExternalId, String voiceExternalId, Long fairytaleId) {
+    public static AudioBookGenerateRequestPayload from(AudioBook audioBook, Voice voice, Long fairytaleId) {
         return AudioBookGenerateRequestPayload.builder()
-            .audioBookExternalId(audioBookExternalId)
-            .voiceExternalId(voiceExternalId)
-            .voiceModelPath("dalbit/voice/" + voiceExternalId + "/model")
+            .audioBookExternalId(audioBook.getExternalId())
+            .voiceExternalId(voice.getExternalId())
+            .voiceModelPath(voice.getModelPath())
             .fairytaleId(fairytaleId)
-            .audioBookAudioPath("dalbit/audioBook/" + audioBookExternalId + "/audio")
+            .audioBookAudioPath(audioBook.getAudioDirectory(voice.getExternalId()))
             .build();
     }
 }

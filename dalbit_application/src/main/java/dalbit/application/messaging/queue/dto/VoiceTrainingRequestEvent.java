@@ -1,5 +1,7 @@
 package dalbit.application.messaging.queue.dto;
 
-public record VoiceTrainingRequestEvent(String externalId) {
+import dalbit.domain.voice.Voice;
+
+public record VoiceTrainingRequestEvent(Voice voice) {
 
 }

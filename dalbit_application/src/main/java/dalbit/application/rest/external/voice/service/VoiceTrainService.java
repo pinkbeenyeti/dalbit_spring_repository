@@ -36,15 +36,15 @@ public class VoiceTrainService implements TrainVoiceUseCase {
         Voice voice = loadVoicePort.loadVoiceByUserIdAndExternalId(userId, externalId)
             .orElseThrow(() -> new DalbitException(ErrorCode.NOT_EXIST_VOICE));
 
-        if (!verifyUploadPort.verifyFileCount("dalbit/voice/" + externalId + "/audio/", 10)) {
-            log.warn("음성 파일 10개가 모두 업로드되지 않았습니다. 학습 요청 거부 - externalId: {}", externalId);
+        if (!verifyUploadPort.verifyFileCount(voice.getRecordDirectory(), 10)) {
+            log.warn("음성 파일 10개가 모두 업로드되지 않았습니다. 학습 요청 거부 - externalId: {}, path: {}", externalId, voice.getRecordDirectory());
             throw new DalbitException(ErrorCode.INCOMPLETE_VOICE_UPLOAD);
         }
 
         voice.startTraining();
         Voice savedVoice = saveVoicePort.saveVoice(voice);
 
-        eventPublisher.publishEvent(new VoiceTrainingRequestEvent(savedVoice.getExternalId()));
+        eventPublisher.publishEvent(new VoiceTrainingRequestEvent(savedVoice));
     }
 
     @Override

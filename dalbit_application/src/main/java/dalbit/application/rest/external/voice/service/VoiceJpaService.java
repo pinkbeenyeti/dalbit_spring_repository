@@ -10,7 +10,6 @@ import dalbit.application.persistence.jpa.voice.port.SaveVoicePort;
 import dalbit.application.storage.port.GenerateUploadUrlPort;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
-import dalbit.domain.common.storage.Category;
 import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
 import dalbit.domain.voice.VoiceName;
@@ -45,9 +44,12 @@ public class VoiceJpaService implements
 
     @Override
     @Transactional
-    public List<String> getVoiceUploadUrls(Category fileCategory, String targetId, int count) {
+    public List<String> getVoiceUploadUrls(Long userId, String targetId, int count) {
+        Voice voice = loadVoicePort.loadVoiceByUserIdAndExternalId(userId, targetId)
+            .orElseThrow(() -> new DalbitException(ErrorCode.NOT_EXIST_VOICE));
+
         List<String> paths = IntStream.rangeClosed(1, count)
-            .mapToObj(i -> fileCategory.generatePath(targetId, i))
+            .mapToObj(voice::getRecordFilePath)
             .toList();
 
         return generateUploadUrlPort.generateUploadUrls(paths);

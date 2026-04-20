@@ -23,8 +23,8 @@ public class VoiceTrainingEventListener {
 
     @TransactionalEventListener(phase =  TransactionPhase.AFTER_COMMIT)
     public void handleVoiceTrainingRequestEvent(VoiceTrainingRequestEvent event) {
-        log.info("DB 커밋 완료. 목소리 학습 메시지 큐 전송 시작 - voice_external_id: {}", event.externalId());
-        sendVoiceTrainingPort.sendVoiceTrainingRequest(event.externalId());
+        log.info("DB 커밋 완료. 목소리 학습 메시지 큐 전송 시작 - voice_external_id: {}", event.voice().getExternalId());
+        sendVoiceTrainingPort.sendVoiceTrainingRequest(event.voice());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

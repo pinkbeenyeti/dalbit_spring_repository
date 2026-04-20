@@ -65,6 +65,7 @@ class VoiceTrainServiceTest {
         @DisplayName("목소리 학습 요청 완료: 음성 파일 업로드 확인, DB 업데이트 완료")
         void success_voice_training_request() {
             given(loadVoicePort.loadVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID)).willReturn(Optional.of(mockVoice));
+            given(mockVoice.getRecordDirectory()).willReturn(UPLOAD_PATH);
             given(verifyUploadPort.verifyFileCount(UPLOAD_PATH, 10)).willReturn(true);
             given(saveVoicePort.saveVoice(mockVoice)).willReturn(mockVoice);
             given(mockVoice.getExternalId()).willReturn(EXTERNAL_VOICE_ID);
@@ -76,7 +77,7 @@ class VoiceTrainServiceTest {
             then(eventPublisher).should(times(1)).publishEvent(requestEventCaptor.capture());
 
             VoiceTrainingRequestEvent publishedEvent = requestEventCaptor.getValue();
-            assertThat(publishedEvent.externalId()).isEqualTo(EXTERNAL_VOICE_ID);
+            assertThat(publishedEvent.voice().getExternalId()).isEqualTo(EXTERNAL_VOICE_ID);
         }
 
         @Test
@@ -96,6 +97,7 @@ class VoiceTrainServiceTest {
         @DisplayName("목소리 학습 요청 실패: 음성 파일 업로드 미완료")
         void fail_when_file_upload_incomplete() {
             given(loadVoicePort.loadVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID)).willReturn(Optional.of(mockVoice));
+            given(mockVoice.getRecordDirectory()).willReturn(UPLOAD_PATH);
             given(verifyUploadPort.verifyFileCount(UPLOAD_PATH, 10)).willReturn(false);
 
             assertThatThrownBy(() -> voiceTrainService.startVoiceTraining(USER_ID, EXTERNAL_VOICE_ID))

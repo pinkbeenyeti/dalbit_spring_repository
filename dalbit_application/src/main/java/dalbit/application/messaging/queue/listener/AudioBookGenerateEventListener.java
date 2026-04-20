@@ -23,8 +23,8 @@ public class AudioBookGenerateEventListener {
 
     @TransactionalEventListener(phase =  TransactionPhase.AFTER_COMMIT)
     public void handleAudioBookGenerationRequestEvent(AudioBookGenerationRequestEvent event) {
-        log.info("DB 커밋 완료. 오디오 북 생성 메시지 큐 전송 시작: {}", event.externalId());
-        sendAudioBookGeneratePort.sendAudioBookGenerateRequest(event.externalId(), event.voiceExternalId(), event.fairytaleId());
+        log.info("DB 커밋 완료. 오디오 북 생성 메시지 큐 전송 시작: {}", event.audioBook().getExternalId());
+        sendAudioBookGeneratePort.sendAudioBookGenerateRequest(event.audioBook(), event.voice(), event.fairytaleId());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

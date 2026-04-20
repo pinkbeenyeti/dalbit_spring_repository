@@ -59,4 +59,17 @@ public class Voice {
     public void updateVoiceName(VoiceName newName) {
         this.name = newName;
     }
+
+    public String getRecordDirectory() {
+        return String.format("voice/record/%s/%s/",
+            this.externalId, this.name.getValue());
+    }
+
+    public String getRecordFilePath(int index) {
+        return getRecordDirectory() + index + ".wav";
+    }
+
+    public String getModelPath() {
+        return String.format("voice/model/%s", this.externalId);
+    }
 }

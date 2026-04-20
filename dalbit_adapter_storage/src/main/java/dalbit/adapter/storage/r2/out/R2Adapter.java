@@ -56,14 +56,15 @@ public class R2Adapter implements GenerateUploadUrlPort, VerifyUploadPort {
             ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
                 .bucket(r2Properties.bucketName())
                 .prefix(filePathPrefix)
+                .maxKeys(expectedCount) // Performance Optimization: Fetch only up to expectedCount
                 .build();
 
             long actualCount = r2Client.listObjectsV2(listRequest).contents().stream()
                 .filter(s3Object -> !s3Object.key().endsWith("/"))
                 .count();
 
-            log.info("[R2 Storage] 폴더({}) 파일 개수 확인: 요청 {}개 / 실제 {}개", filePathPrefix, expectedCount, actualCount);
-            return actualCount == expectedCount;
+            log.info("[R2 Storage] 경로({}) 파일 개수 확인: 요청 {}개 / 실제 {}개", filePathPrefix, expectedCount, actualCount);
+            return actualCount >= expectedCount;
 
         } catch (S3Exception e) {
             log.error("[R2 Storage] 디렉터리 파일 목록 조회 중 에러 발생. prefix: {}", filePathPrefix, e);

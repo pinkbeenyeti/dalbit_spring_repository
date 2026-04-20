@@ -1,6 +1,7 @@
 package dalbit.adapter.messaging.queue.rabbit.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dalbit.domain.voice.Voice;
 import lombok.Builder;
 
 @Builder
@@ -10,11 +11,11 @@ public record VoiceTrainingRequestPayload(
     @JsonProperty("voice_model_path") String voiceModelPath
 ) {
 
-    public static VoiceTrainingRequestPayload from(String externalId) {
+    public static VoiceTrainingRequestPayload from(Voice voice) {
         return VoiceTrainingRequestPayload.builder()
-            .voiceExternalId(externalId)
-            .voiceAudioPath("dalbit/voice/" + externalId + "/audio")
-            .voiceModelPath("dalbit/voice/" + externalId + "/model")
+            .voiceExternalId(voice.getExternalId())
+            .voiceAudioPath(voice.getRecordDirectory())
+            .voiceModelPath(voice.getModelPath())
             .build();
     }
 }
