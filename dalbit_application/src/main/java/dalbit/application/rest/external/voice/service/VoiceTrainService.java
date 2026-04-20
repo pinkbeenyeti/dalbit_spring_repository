@@ -49,11 +49,16 @@ public class VoiceTrainService implements TrainVoiceUseCase {
 
     @Override
     @Transactional
-    public void completeVoiceTraining(String externalId, String modelUrl) {
+    public void completeVoiceTraining(String externalId, String modelUrl, boolean isSuccess) {
         Voice voice = loadVoicePort.loadVoiceByExternalId(externalId)
             .orElseThrow(() -> new DalbitException(ErrorCode.NOT_EXIST_VOICE));
 
-        voice.completeTraining(modelUrl);
+        if (isSuccess)  voice.completeTraining(modelUrl);
+        else {
+            log.warn("[AI Server] 목소리 학습 실패 보고 수신 - externalId: {}", externalId);
+            voice.failTraining();
+        }
+
         Voice savedVoice = saveVoicePort.saveVoice(voice);
 
         List<UserDevice> userDevices = loadUserDevicePort.loadExistFcmTokenUserDevicesByUserId(savedVoice.getUserId());
@@ -64,6 +69,7 @@ public class VoiceTrainService implements TrainVoiceUseCase {
         eventPublisher.publishEvent(new VoiceTrainingCompleteEvent(
             savedVoice.getUserId(),
             savedVoice.getExternalId(),
-            tokens));
+            tokens,
+            isSuccess));
     }
 }

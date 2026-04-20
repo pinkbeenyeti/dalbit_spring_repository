@@ -29,12 +29,18 @@ public class AudioBookGenerateEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleAudioBookGenerationCompletionEvent(AudioBookGenerationCompleteEvent event) {
-        log.info("DB 커밋 완료. 유저 ID: {}, 오디오 북 ID: {}", event.userId(), event.audioBookExternalId());
+        log.info("DB 커밋 완료. 오디오북 생성 결과 푸시 알림 전송 시작 - user_Id: {}, audioBook_external_id: {}, success: {}", 
+            event.userId(), event.audioBookExternalId(), event.isSuccess());
+
+        String title = event.isSuccess() ? "달빛 동화책 완성! \uD83C\uDF19" : "동화책 생성 실패 \u26A0\uFE0F";
+        String body = event.isSuccess() ? 
+            "요청하신 오디오북이 완성되었어요. 지금 바로 아이에게 들려주세요" : 
+            "오디오북을 만드는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
 
         try {
-            notificationPort.sendMulticastNotification(event.tokens(), NOTIFY_TITLE, NOTIFY_BODY);
+            notificationPort.sendMulticastNotification(event.tokens(), title, body);
         } catch (Exception e) {
-            log.error("오디오북 학습 완료 FCM 알림 전송 실패 - user_Id: {}, audioBook_external_id: {}", event.userId(), event.audioBookExternalId());
+            log.error("오디오북 알림 전송 실패 - user_Id: {}, audioBook_external_id: {}", event.userId(), event.audioBookExternalId());
         }
     }
 }

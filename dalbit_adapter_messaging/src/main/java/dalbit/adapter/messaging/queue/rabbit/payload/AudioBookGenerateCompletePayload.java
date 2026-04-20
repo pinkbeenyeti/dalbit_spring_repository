@@ -15,13 +15,12 @@ public record AudioBookGenerateCompletePayload(
         if (!StringUtils.hasText(audioBookExternalId)) {
             throw new IllegalArgumentException("AI 서버 응답 에러: audioBook_external_id가 누락되었습니다.");
         }
-
-        if (!StringUtils.hasText(audioBookAudioUrl)) {
-            throw new IllegalArgumentException("AI 서버 응답 에러: audioBook_audio_url이 누락되었습니다.");
-        }
-
         if (!StringUtils.hasText(audioBookGenerationStatus)) {
-            throw new IllegalArgumentException("AI 서버 응답 에러: audioBook_status가 누락되었습니다.");
+            throw new IllegalArgumentException("AI 서버 응답 에러: audioBook_generation_status가 누락되었습니다.");
         }
+    }
+
+    public boolean isSuccess() {
+        return "SUCCESS".equalsIgnoreCase(audioBookGenerationStatus);
     }
 }

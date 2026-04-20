@@ -56,20 +56,16 @@ public class AudioBookGenerateService implements GenerateAudioBookUseCase {
 
     @Override
     @Transactional
-    public void completeGenerateAudioBook(String audioBookExternalId, String audioUrl, String status) {
+    public void completeGenerateAudioBook(String audioBookExternalId, String audioUrl, boolean isSuccess) {
         AudioBook audioBook = loadAudioBookPort.loadAudioBookByExternalId(audioBookExternalId)
             .orElseThrow(() -> new DalbitException(ErrorCode.NOT_EXIST_AUDIO_BOOK));
 
-        if (status.equalsIgnoreCase("FAIL")) {
-            log.error("[AI Server] 오디오북 생성 실패 보고 수신 - audiobook_externalId: {}", audioBookExternalId);
-
+        if (isSuccess) audioBook.complete(audioUrl);
+        else {
+            log.warn("[AI Server] 오디오북 생성 실패 보고 수신 - audiobook_externalId: {}", audioBookExternalId);
             audioBook.fail();
-            saveAudioBookPort.saveAudioBook(audioBook);
-
-            return;
         }
 
-        audioBook.complete(audioUrl);
         AudioBook savedAudioBook = saveAudioBookPort.saveAudioBook(audioBook);
 
         List<UserDevice> userDevices = loadUserDevicePort.loadExistFcmTokenUserDevicesByUserId(savedAudioBook.getUserId());
@@ -77,6 +73,6 @@ public class AudioBookGenerateService implements GenerateAudioBookUseCase {
                 .map(UserDevice::getFcmToken)
                 .collect(Collectors.toList());
 
-        eventPublisher.publishEvent(new AudioBookGenerationCompleteEvent(audioBook.getUserId(), audioBookExternalId, tokens));
+        eventPublisher.publishEvent(new AudioBookGenerationCompleteEvent(audioBook.getUserId(), audioBookExternalId, tokens, isSuccess));
     }
 }

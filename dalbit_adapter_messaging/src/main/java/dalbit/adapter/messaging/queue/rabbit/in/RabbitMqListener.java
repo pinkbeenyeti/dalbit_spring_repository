@@ -36,7 +36,7 @@ public class RabbitMqListener {
         log.info("[RabbitMQ] 목소리 학습 완료 메시지 수신 - voice_externalId: {}", payload.voiceExternalId());
 
         try {
-            trainVoiceUseCase.completeVoiceTraining(payload.voiceExternalId(), payload.voiceModelUrl());
+            trainVoiceUseCase.completeVoiceTraining(payload.voiceExternalId(), payload.voiceModelUrl(), payload.isSuccess());
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             log.error("[RabbitMQ] 목소리 학습 완료 처리 중 비즈니스 에러 발생 - voice_externalId: {}, error: {}", payload.voiceExternalId(), e.getMessage());
@@ -57,7 +57,7 @@ public class RabbitMqListener {
         log.info("[RabbitMQ] 오디오북 생성 완료 메시지 수신 - audioBook_externalId: {}", payload.audioBookExternalId());
 
         try {
-            generateAudioBookUseCase.completeGenerateAudioBook(payload.audioBookExternalId(), payload.audioBookAudioUrl(), payload.audioBookGenerationStatus());
+            generateAudioBookUseCase.completeGenerateAudioBook(payload.audioBookExternalId(), payload.audioBookAudioUrl(), payload.isSuccess());
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             log.error("[RabbitMQ] 오디오북 생성 완료 처리 중 비즈니스 에러 발생 - audioBook_externalId: {}, error: {}", payload.audioBookExternalId(), e.getMessage());

@@ -5,7 +5,7 @@ import java.util.List;
 public record AudioBookGenerationCompleteEvent(
     Long userId,
     String audioBookExternalId,
-    List<String> tokens
+    List<String> tokens,
+    boolean isSuccess
 ) {
-
 }
