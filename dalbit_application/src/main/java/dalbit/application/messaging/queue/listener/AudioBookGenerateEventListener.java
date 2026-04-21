@@ -4,6 +4,7 @@ import dalbit.application.messaging.push.port.NotificationPort;
 import dalbit.application.messaging.queue.dto.AudioBookGenerationCompleteEvent;
 import dalbit.application.messaging.queue.dto.AudioBookGenerationRequestEvent;
 import dalbit.application.messaging.queue.port.SendAudioBookGeneratePort;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,13 @@ public class AudioBookGenerateEventListener {
             "오디오북을 만드는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
 
         try {
-            notificationPort.sendMulticastNotification(event.tokens(), title, body);
+            Map<String, String> data = Map.of(
+                "type", "audio_book_complete",
+                "audioBookExternalId", event.audioBookExternalId(),
+                "isSuccess", String.valueOf(event.isSuccess())
+            );
+
+            notificationPort.sendMulticastNotification(event.tokens(), title, body, data);
         } catch (Exception e) {
             log.error("오디오북 알림 전송 실패 - user_Id: {}, audioBook_external_id: {}", event.userId(), event.audioBookExternalId());
         }

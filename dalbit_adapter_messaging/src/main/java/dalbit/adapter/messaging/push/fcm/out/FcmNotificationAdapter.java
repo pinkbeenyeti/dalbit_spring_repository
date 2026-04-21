@@ -14,6 +14,7 @@ import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FcmNotificationAdapter implements NotificationPort {
 
+    private final FirebaseMessaging firebaseMessaging;
     private final Executor fcmExecutor;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public void sendMulticastNotification(List<String> tokens, String title, String body) {
+        sendMulticastNotification(tokens, title, body, null);
+    }
+
+    @Override
+    public void sendMulticastNotification(List<String> tokens, String title, String body, Map<String, String> data) {
         if (tokens == null || tokens.isEmpty()) {
             return;
         }
@@ -39,12 +46,17 @@ public class FcmNotificationAdapter implements NotificationPort {
             .setBody(body)
             .build();
 
-        MulticastMessage message = MulticastMessage.builder()
+        MulticastMessage.Builder messageBuilder = MulticastMessage.builder()
             .addAllTokens(tokens)
-            .setNotification(notification)
-            .build();
+            .setNotification(notification);
 
-        ApiFuture<BatchResponse> future = FirebaseMessaging.getInstance().sendEachForMulticastAsync(message);
+        if (data != null && !data.isEmpty()) {
+            messageBuilder.putAllData(data);
+        }
+
+        MulticastMessage message = messageBuilder.build();
+
+        ApiFuture<BatchResponse> future = firebaseMessaging.sendEachForMulticastAsync(message);
         ApiFutures.addCallback(future, new ApiFutureCallback<>() {
             @Override
             public void onSuccess(BatchResponse response) {

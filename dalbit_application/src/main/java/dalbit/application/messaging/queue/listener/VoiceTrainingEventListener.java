@@ -4,6 +4,7 @@ import dalbit.application.messaging.push.port.NotificationPort;
 import dalbit.application.messaging.queue.dto.VoiceTrainingCompleteEvent;
 import dalbit.application.messaging.queue.dto.VoiceTrainingRequestEvent;
 import dalbit.application.messaging.queue.port.SendVoiceTrainingPort;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,13 @@ public class VoiceTrainingEventListener {
             "학습 중 오류가 발생했습니다. 음성 파일을 다시 확인하거나 잠시 후 시도해주세요.";
 
         try {
-            notificationPort.sendMulticastNotification(event.tokens(), title, body);
+            Map<String, String> data = Map.of(
+                "type", "voice_training_complete",
+                "voiceExternalId", event.voiceExternalId(),
+                "isSuccess", String.valueOf(event.isSuccess())
+            );
+
+            notificationPort.sendMulticastNotification(event.tokens(), title, body, data);
         } catch (Exception e) {
             log.error("목소리 학습 알림 전송 실패 - user_Id: {}, voice_external_id: {}", event.userId(), event.voiceExternalId());
         }

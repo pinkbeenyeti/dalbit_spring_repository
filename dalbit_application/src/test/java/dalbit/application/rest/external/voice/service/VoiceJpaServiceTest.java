@@ -15,7 +15,6 @@ import dalbit.application.persistence.jpa.voice.port.SaveVoicePort;
 import dalbit.application.storage.port.GenerateUploadUrlPort;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
-import dalbit.domain.common.storage.Category;
 import dalbit.domain.voice.RegistrationStatus;
 import dalbit.domain.voice.Voice;
 import dalbit.domain.voice.VoiceName;
@@ -90,18 +89,17 @@ class VoiceJpaServiceTest {
         @Test
         @DisplayName("목소리 업로드 url 리스트 생성 완료")
         void success_generate_upload_urls() {
-            Category mockCategory = mock(Category.class);
-            String targetId = "target-123";
             int count = 3;
             List<String> expectedUrls = List.of("url1", "url2", "url3");
 
-            given(mockCategory.generatePath(targetId, 1)).willReturn("path/1");
-            given(mockCategory.generatePath(targetId, 2)).willReturn("path/2");
-            given(mockCategory.generatePath(targetId, 3)).willReturn("path/3");
+            given(loadVoicePort.loadVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID)).willReturn(Optional.of(voice));
+            given(voice.getRecordFilePath(1)).willReturn("path/1");
+            given(voice.getRecordFilePath(2)).willReturn("path/2");
+            given(voice.getRecordFilePath(3)).willReturn("path/3");
 
             given(generateUploadUrlPort.generateUploadUrls(any())).willReturn(expectedUrls);
 
-            List<String> resultUrls = voiceJpaService.getVoiceUploadUrls(mockCategory, targetId, count);
+            List<String> resultUrls = voiceJpaService.getVoiceUploadUrls(USER_ID, EXTERNAL_VOICE_ID, count);
 
             assertThat(resultUrls).isEqualTo(expectedUrls);
 
@@ -110,6 +108,18 @@ class VoiceJpaServiceTest {
 
             assertThat(capturedPaths).hasSize(3);
             assertThat(capturedPaths).containsExactly("path/1", "path/2", "path/3");
+        }
+
+        @Test
+        @DisplayName("목소리 업로드 url 리스트 생성 실패: 존재하지 않는 목소리")
+        void fail_when_voice_not_found() {
+            given(loadVoicePort.loadVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID)).willReturn(Optional.empty());
+
+            assertThatThrownBy(() -> voiceJpaService.getVoiceUploadUrls(USER_ID, EXTERNAL_VOICE_ID, 3))
+                .isInstanceOf(DalbitException.class)
+                .hasMessageContaining(ErrorCode.NOT_EXIST_VOICE.getMessage());
+
+            then(generateUploadUrlPort).should(never()).generateUploadUrls(any());
         }
     }
 
