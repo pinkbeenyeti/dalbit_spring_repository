@@ -30,10 +30,26 @@ public class AudioBookPersistenceAdapter implements
     }
 
     @Override
+    public void saveAllAudioBooks(List<AudioBook> audioBooks) {
+        List<AudioBookJpaEntity> entities = audioBooks.stream()
+            .map(audioBookJpaMapper::toEntity)
+            .toList();
+
+        audioBookJpaRepository.saveAll(entities);
+    }
+
+    @Override
     public List<AudioBook> loadAllAudioBookByUserId(Long userId) {
         return audioBookJpaRepository.findAllByUserId(userId).stream()
             .map(audioBookJpaMapper::toDomain)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AudioBook> loadAudioBooksByStatusInAndCreatedBefore(List<GenerationStatus> statuses, LocalDateTime dateTime) {
+        return audioBookJpaRepository.findAllByStatusInAndCreatedAtBefore(statuses, dateTime).stream()
+            .map(audioBookJpaMapper::toDomain)
+            .toList();
     }
 
     @Override
@@ -43,12 +59,17 @@ public class AudioBookPersistenceAdapter implements
     }
 
     @Override
-    public void deleteAudioBook(Long userId, String audioExternalId) {
-        audioBookJpaRepository.deleteByUserIdAndExternalId(userId, audioExternalId);
+    public void deleteAudioBook(Long userId, String externalId) {
+        audioBookJpaRepository.deleteByUserIdAndExternalId(userId, externalId);
     }
 
     @Override
-    public void deleteAudioBooksByStatusInAndCreatedBefore(List<GenerationStatus> statuses, LocalDateTime dateTime) {
-        audioBookJpaRepository.deleteByStatusInAndCreatedAtBefore(statuses, dateTime);
+    public void deleteAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        for (int i = 0; i < ids.size(); i += 1000) {
+            List<Long> chunk = ids.subList(i, Math.min(i + 1000, ids.size()));
+            audioBookJpaRepository.deleteAllByIdIn(chunk);
+        }
     }
 }
+

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface DeleteVoicePort {
     void deleteVoiceByUserIdAndExternalId(Long userId, String externalId);
-    void deleteVoicesByStatusInAndCreatedBefore(List<RegistrationStatus> statuses, LocalDateTime dateTime);
+    void deleteAllByIds(List<Long> ids);
 }

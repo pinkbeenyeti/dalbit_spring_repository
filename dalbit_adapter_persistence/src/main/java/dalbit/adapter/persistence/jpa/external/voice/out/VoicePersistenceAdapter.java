@@ -29,8 +29,24 @@ public class VoicePersistenceAdapter implements SaveVoicePort, LoadVoicePort, De
     }
 
     @Override
+    public void saveAllVoices(List<Voice> voices) {
+        List<VoiceJpaEntity> entities = voices.stream()
+            .map(voiceJpaMapper::toEntity)
+            .toList();
+
+        voiceJpaRepository.saveAll(entities);
+    }
+
+    @Override
     public List<Voice> loadAllVoicesByUserIdAndStatuses(Long userId, List<RegistrationStatus> statuses) {
         return voiceJpaRepository.findAllByUserIdAndStatusIn(userId, statuses).stream()
+            .map(voiceJpaMapper::toDomain)
+            .toList();
+    }
+
+    @Override
+    public List<Voice> loadVoicesByStatusInAndCreatedBefore(List<RegistrationStatus> statuses, LocalDateTime dateTime) {
+        return voiceJpaRepository.findAllByStatusInAndCreatedAtBefore(statuses, dateTime).stream()
             .map(voiceJpaMapper::toDomain)
             .toList();
     }
@@ -65,7 +81,12 @@ public class VoicePersistenceAdapter implements SaveVoicePort, LoadVoicePort, De
     }
 
     @Override
-    public void deleteVoicesByStatusInAndCreatedBefore(List<RegistrationStatus> statuses, LocalDateTime dateTime) {
-        voiceJpaRepository.deleteByStatusInAndCreatedAtBefore(statuses, dateTime);
+    public void deleteAllByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        for (int i = 0; i < ids.size(); i += 1000) {
+            List<Long> chunk = ids.subList(i, Math.min(i + 1000, ids.size()));
+            voiceJpaRepository.deleteAllByIdIn(chunk);
+        }
     }
 }
+

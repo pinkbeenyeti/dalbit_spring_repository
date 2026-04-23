@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface DeleteAudioBookPort {
     void deleteAudioBook(Long userId, String externalId);
-    void deleteAudioBooksByStatusInAndCreatedBefore(List<GenerationStatus> statuses, LocalDateTime dateTime);
+    void deleteAllByIds(List<Long> ids);
 }

@@ -5,13 +5,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 import dalbit.application.persistence.jpa.voice.port.DeleteVoicePort;
 import dalbit.application.persistence.jpa.voice.port.LoadVoicePort;
 import dalbit.application.persistence.jpa.voice.port.SaveVoicePort;
+import dalbit.application.storage.event.StorageDeleteEvent;
 import dalbit.application.storage.port.GenerateUploadUrlPort;
 import dalbit.domain.common.error.DalbitException;
 import dalbit.domain.common.error.ErrorCode;
@@ -29,6 +29,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("VoiceJpaService, 비즈니스 로직 테스트")
@@ -41,11 +42,13 @@ class VoiceJpaServiceTest {
     @Mock private LoadVoicePort loadVoicePort;
     @Mock private DeleteVoicePort deleteVoicePort;
     @Mock private GenerateUploadUrlPort generateUploadUrlPort;
+    @Mock private ApplicationEventPublisher eventPublisher;
 
     @Mock private Voice voice;
 
     @Captor private ArgumentCaptor<Voice> voiceCaptor;
     @Captor private ArgumentCaptor<List<String>> pathsCaptor;
+    @Captor private ArgumentCaptor<StorageDeleteEvent> eventCaptor;
 
     private final Long USER_ID = 1L;
     private final String EXTERNAL_VOICE_ID = "voice-test-id";
@@ -191,10 +194,21 @@ class VoiceJpaServiceTest {
     class Describe_deleteVoice {
 
         @Test
-        @DisplayName("목소리 삭제 완료: DB에서 해당하는 목소리 삭제")
+        @DisplayName("목소리 삭제 완료: DB 삭제 요청 및 스토리지 삭제 이벤트 발행")
         void success_delete_voice() {
+            given(loadVoicePort.loadVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID)).willReturn(Optional.of(voice));
+            given(voice.getRecordDirectory()).willReturn("voice/record/path/");
+            given(voice.getModelUrl()).willReturn("voice/model/path");
+            given(voice.getStatus()).willReturn(RegistrationStatus.COMPLETED);
+            given(voice.getExternalId()).willReturn(EXTERNAL_VOICE_ID);
+
             voiceJpaService.deleteVoice(USER_ID, EXTERNAL_VOICE_ID);
 
+            then(eventPublisher).should(times(1)).publishEvent(eventCaptor.capture());
+            StorageDeleteEvent event = eventCaptor.getValue();
+            assertThat(event.directoryPaths()).contains("voice/record/path/");
+            assertThat(event.filePaths()).contains("voice/model/path");
+            
             then(deleteVoicePort).should(times(1)).deleteVoiceByUserIdAndExternalId(USER_ID, EXTERNAL_VOICE_ID);
         }
     }
