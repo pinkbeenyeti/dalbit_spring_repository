@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = "dalbit", exclude = { UserDetailsServiceAutoConfiguration.class })
 @ConfigurationPropertiesScan(basePackages = "dalbit")
 @EnableScheduling
+@org.springframework.scheduling.annotation.EnableAsync
 public class DalbitBootstrapApplication {
 
     public static void main(String[] args) {
