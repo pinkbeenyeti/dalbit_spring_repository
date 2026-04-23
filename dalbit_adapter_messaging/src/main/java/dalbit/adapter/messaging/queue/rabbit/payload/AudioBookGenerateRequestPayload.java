@@ -18,9 +18,9 @@ public record AudioBookGenerateRequestPayload(
         return AudioBookGenerateRequestPayload.builder()
             .audioBookExternalId(audioBook.getExternalId())
             .voiceExternalId(voice.getExternalId())
-            .voiceModelPath(voice.getModelPath())
+            .voiceModelPath(voice.getModelUrl())
             .fairytaleId(fairytaleId)
-            .audioBookAudioPath(audioBook.getAudioDirectory(voice.getExternalId()))
+            .audioBookAudioPath(AudioBook.getBaseDirectory(voice.getExternalId()))
             .build();
     }
 }

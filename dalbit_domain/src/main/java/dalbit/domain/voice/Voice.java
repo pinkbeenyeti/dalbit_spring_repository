@@ -68,8 +68,4 @@ public class Voice {
     public String getRecordFilePath(int index) {
         return getRecordDirectory() + index + ".wav";
     }
-
-    public String getModelPath() {
-        return String.format("voice/model/%s", this.externalId);
-    }
 }

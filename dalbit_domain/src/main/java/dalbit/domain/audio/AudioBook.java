@@ -42,7 +42,7 @@ public class AudioBook {
         this.audioUrl = audioUrl;
     }
 
-    public String getAudioDirectory(String voiceExternalId) {
-        return String.format("audioBook/%s/%s/", this.externalId, voiceExternalId);
+    public static String getBaseDirectory(String voiceExternalId) {
+        return String.format("audioBook/%s/", voiceExternalId);
     }
 }

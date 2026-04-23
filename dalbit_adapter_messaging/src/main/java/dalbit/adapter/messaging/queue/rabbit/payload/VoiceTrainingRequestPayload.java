@@ -15,7 +15,7 @@ public record VoiceTrainingRequestPayload(
         return VoiceTrainingRequestPayload.builder()
             .voiceExternalId(voice.getExternalId())
             .voiceAudioPath(voice.getRecordDirectory())
-            .voiceModelPath(voice.getModelPath())
+            .voiceModelPath(voice.getModelUrl())
             .build();
     }
 }
